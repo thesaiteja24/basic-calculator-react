@@ -31,12 +31,31 @@ const Calculator = () => {
   // Handles evaluating the mathematical expression in the input string
   const handleCalculate = () => {
     try {
+      if (!input) {
+        setResult("Error: No input provided"); // Handle empty input
+        return;
+      }
+
       const calc = new Calc(); // Initialize an empty Calc instance
       calc.compile(input); // Compile the input expression into RPN (Reverse Polish Notation)
-      const result = calc.calc(); // Evaluate the compiled expression
-      setResult(result); // Update the result state with the calculation result
+      const calculationResult = calc.calc(); // Evaluate the compiled expression
+
+      if (isNaN(calculationResult)) {
+        throw new Error("Invalid calculation result"); // Handle non-numeric results
+      }
+
+      setResult(calculationResult); // Update the result state with the calculation result
     } catch (error) {
-      setResult("Error"); // Set result to "Error" if any syntax or runtime error occurs
+      // Handle specific errors from the Calc library or runtime
+      if (error instanceof SyntaxError) {
+        setResult("Error: Invalid syntax");
+      } else if (error instanceof ReferenceError) {
+        setResult("Error: Missing variable value");
+      } else {
+        setResult("Error: Something went wrong");
+      }
+
+      console.error("Calculation error:", error.message); // Log the error for debugging
     }
   };
 
@@ -49,8 +68,8 @@ const Calculator = () => {
         <div className="display flex flex-col justify-end h-24 bg-lightGrey rounded-md p-4 mb-4">
           {/* Shows the user input or "0" if input is empty */}
           <div className="text-right">{input || "0"}</div>
-          {/* Shows the calculation result */}
-          <div className="text-right">{result}</div>
+          {/* Shows the calculation result or error message */}
+          <div className="text-right text-red-500">{result}</div>
         </div>
 
         {/* Buttons section */}
