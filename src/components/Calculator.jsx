@@ -1,4 +1,3 @@
-// src/Calculator.jsx
 import React, { useState } from "react";
 import Calc from "expression-calculator";
 
@@ -6,6 +5,7 @@ const Calculator = () => {
   const [input, setInput] = useState(""); // State for user input
   const [result, setResult] = useState(""); // State for calculation result
   const [isOperatorDisabled, setIsOperatorDisabled] = useState(false); // State to disable operators
+  const [reset, setReset] = useState(false); // State to reset input after calculation
 
   // Regex to validate valid expressions
   const isValidExpression = (expression) => {
@@ -15,15 +15,22 @@ const Calculator = () => {
 
   // Handles when a button is clicked
   const handleClick = (value) => {
-    // Prevent adding multiple consecutive operators
-    if (/[\+\-\*\/]$/.test(input) && /[\+\-\*\/]/.test(value)) {
-      setIsOperatorDisabled(true); // Disable operators when a second operator is attempted
-      return;
-    }
+    if (reset) {
+      // Reset input and result if starting a new expression after evaluation
+      setInput(value);
+      setResult("");
+      setReset(false);
+    } else {
+      // Prevent adding multiple consecutive operators
+      if (/[\+\-\*\/]$/.test(input) && /[\+\-\*\/]/.test(value)) {
+        setIsOperatorDisabled(true); // Disable operators when a second operator is attempted
+        return;
+      }
 
-    // Append the value and reset operator disable state
-    setInput(input + value);
-    setIsOperatorDisabled(false); // Enable operators
+      // Append the value and reset operator disable state
+      setInput(input + value);
+      setIsOperatorDisabled(false); // Enable operators
+    }
   };
 
   // Handle deleting the last character
@@ -42,6 +49,7 @@ const Calculator = () => {
     setInput("");
     setResult("");
     setIsOperatorDisabled(false); // Re-enable all operators
+    setReset(false);
   };
 
   // Handles calculating the expression
@@ -57,6 +65,7 @@ const Calculator = () => {
       const calculationResult = calc.calc();
 
       setResult(calculationResult); // Display result
+      setReset(true); // Set reset flag to true after calculation
     } catch (error) {
       setResult("Error");
       console.error("Calculation Error:", error);
