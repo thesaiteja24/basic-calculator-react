@@ -124,26 +124,28 @@ const Calculator = () => {
   }, [input]);
 
   return (
-    <div className="flex flex-col items-center justify-center h-screen bg-darkNavy-dark">
-      <div className="calculator bg-deepBlue rounded-md shadow-md p-4 w-96">
+    <div className="flex flex-col items-center justify-center min-h-screen bg-darkNavy-dark p-4">
+      <div className="calculator bg-deepBlue rounded-md shadow-md p-4 w-full max-w-md">
         <div className="display flex flex-col justify-end h-24 bg-lightGrey rounded-md p-4 mb-4">
-          <div className="text-right">{input || "0"}</div>
-          <div className="text-right text-red-500">{result}</div>
+          <div className="text-right text-xl md:text-2xl">{input || "0"}</div>
+          <div className="text-right text-red-500 text-lg md:text-xl">
+            {result}
+          </div>
         </div>
-        <div className="buttons grid grid-cols-4 gap-4">
+        <div className="buttons grid grid-cols-4 gap-2 md:gap-4">
           {["7", "8", "9"].map((value) => (
             <button
               onClick={() => handleClick(value)}
               key={value}
-              className="btn-outline-primary py-2 px-4"
+              className="btn-outline-primary py-2 px-4 text-sm md:text-base"
             >
               {value}
             </button>
           ))}
           <button
             onClick={() => handleClick("/")}
-            disabled={isOperatorDisabled} // Disable button if invalid
-            className={`py-2 px-4 ${
+            disabled={isOperatorDisabled}
+            className={`py-2 px-4 text-sm md:text-base ${
               isOperatorDisabled
                 ? "btn-disabled btn-outline-warning"
                 : "btn-outline-warning"
@@ -155,7 +157,7 @@ const Calculator = () => {
             <button
               onClick={() => handleClick(value)}
               key={value}
-              className="btn-outline-primary py-2 px-4"
+              className="btn-outline-primary py-2 px-4 text-sm md:text-base"
             >
               {value}
             </button>
@@ -163,7 +165,7 @@ const Calculator = () => {
           <button
             onClick={() => handleClick("*")}
             disabled={isOperatorDisabled}
-            className={`py-2 px-4 ${
+            className={`py-2 px-4 text-sm md:text-base ${
               isOperatorDisabled
                 ? "btn-disabled btn-outline-warning"
                 : "btn-outline-warning"
@@ -175,7 +177,7 @@ const Calculator = () => {
             <button
               onClick={() => handleClick(value)}
               key={value}
-              className="btn-outline-primary py-2 px-4"
+              className="btn-outline-primary py-2 px-4 text-sm md:text-base"
             >
               {value}
             </button>
@@ -183,7 +185,7 @@ const Calculator = () => {
           <button
             onClick={() => handleClick("-")}
             disabled={isOperatorDisabled}
-            className={`py-2 px-4 ${
+            className={`py-2 px-4 text-sm md:text-base ${
               isOperatorDisabled
                 ? "btn-disabled btn-outline-warning"
                 : "btn-outline-warning"
@@ -195,7 +197,7 @@ const Calculator = () => {
             <button
               onClick={() => handleClick(value)}
               key={value}
-              className="btn-outline-primary py-2 px-4"
+              className="btn-outline-primary py-2 px-4 text-sm md:text-base"
             >
               {value}
             </button>
@@ -203,7 +205,7 @@ const Calculator = () => {
           <button
             onClick={() => handleClick("+")}
             disabled={isOperatorDisabled}
-            className={`py-2 px-4 ${
+            className={`py-2 px-4 text-sm md:text-base ${
               isOperatorDisabled
                 ? "btn-disabled btn-outline-warning"
                 : "btn-outline-warning"
@@ -213,19 +215,19 @@ const Calculator = () => {
           </button>
           <button
             onClick={handleClear}
-            className="btn-outline-danger py-2 px-4"
+            className="btn-outline-danger py-2 px-4 text-sm md:text-base"
           >
             AC
           </button>
           <button
             onClick={handleDelete}
-            className="btn-outline-danger py-2 px-4"
+            className="btn-outline-danger py-2 px-4 text-sm md:text-base"
           >
             C
           </button>
           <button
             onClick={handleCalculate}
-            className="btn-outline-success py-2 px-4"
+            className="btn-outline-success py-2 px-4 text-sm md:text-base"
           >
             =
           </button>
