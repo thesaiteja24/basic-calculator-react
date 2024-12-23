@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Calc from "expression-calculator";
 
 const Calculator = () => {
@@ -20,17 +20,29 @@ const Calculator = () => {
       setInput(value);
       setResult("");
       setReset(false);
-    } else {
-      // Prevent adding multiple consecutive operators
-      if (/[\+\-\*\/]$/.test(input) && /[\+\-\*\/]/.test(value)) {
-        setIsOperatorDisabled(true); // Disable operators when a second operator is attempted
-        return;
-      }
-
-      // Append the value and reset operator disable state
-      setInput(input + value);
-      setIsOperatorDisabled(false); // Enable operators
+      return;
     }
+
+    // Prevent multiple consecutive operators
+    if (/[\+\-\*\/]$/.test(input) && /[\+\-\*\/]/.test(value)) {
+      setIsOperatorDisabled(true); // Disable operators when a second operator is attempted
+      return;
+    }
+
+    // Prevent adding an operator as the first character
+    if (input === "" && /[\+\-\*\/]/.test(value)) {
+      return;
+    }
+
+    // Prevent multiple dots in the same number
+    const lastNumber = input.split(/[\+\-\*\/]/).pop(); // Get the last number in the input
+    if (value === "." && lastNumber.includes(".")) {
+      return; // Don't add another dot if the last number already contains one
+    }
+
+    // Append the value and reset operator disable state
+    setInput(input + value);
+    setIsOperatorDisabled(false); // Enable operators
   };
 
   // Handle deleting the last character
@@ -64,13 +76,52 @@ const Calculator = () => {
       calc.compile(input);
       const calculationResult = calc.calc();
 
-      setResult(calculationResult); // Display result
+      if (calculationResult === Infinity) {
+        setResult("Cannot divide by zero");
+      } else {
+        setResult(calculationResult); // Display result
+      }
       setReset(true); // Set reset flag to true after calculation
     } catch (error) {
       setResult("Error");
       console.error("Calculation Error:", error);
     }
   };
+
+  // Keyboard event listener to capture key presses
+  const handleKeyPress = (event) => {
+    const key = event.key;
+
+    // Handle numerical keys and operators
+    if (/\d/.test(key) || /[\+\-\*\/\.]/.test(key)) {
+      handleClick(key);
+    }
+
+    // Handle Enter key for calculation
+    if (key === "Enter") {
+      handleCalculate();
+    }
+
+    // Handle Backspace key for deleting
+    if (key === "Backspace") {
+      handleDelete();
+    }
+
+    // Handle Escape key for clearing
+    if (key === "Escape") {
+      handleClear();
+    }
+  };
+
+  // Use useEffect to add the keyboard event listener
+  useEffect(() => {
+    document.addEventListener("keydown", handleKeyPress);
+
+    // Cleanup the event listener on component unmount
+    return () => {
+      document.removeEventListener("keydown", handleKeyPress);
+    };
+  }, [input]);
 
   return (
     <div className="flex flex-col items-center justify-center h-screen bg-darkNavy-dark">
@@ -93,7 +144,9 @@ const Calculator = () => {
             onClick={() => handleClick("/")}
             disabled={isOperatorDisabled} // Disable button if invalid
             className={`py-2 px-4 ${
-              isOperatorDisabled ? "btn-disabled btn-outline-warning" : "btn-outline-warning"
+              isOperatorDisabled
+                ? "btn-disabled btn-outline-warning"
+                : "btn-outline-warning"
             }`}
           >
             /
@@ -111,7 +164,9 @@ const Calculator = () => {
             onClick={() => handleClick("*")}
             disabled={isOperatorDisabled}
             className={`py-2 px-4 ${
-              isOperatorDisabled ? "btn-disabled btn-outline-warning" : "btn-outline-warning"
+              isOperatorDisabled
+                ? "btn-disabled btn-outline-warning"
+                : "btn-outline-warning"
             }`}
           >
             *
@@ -129,7 +184,9 @@ const Calculator = () => {
             onClick={() => handleClick("-")}
             disabled={isOperatorDisabled}
             className={`py-2 px-4 ${
-              isOperatorDisabled ? "btn-disabled btn-outline-warning" : "btn-outline-warning"
+              isOperatorDisabled
+                ? "btn-disabled btn-outline-warning"
+                : "btn-outline-warning"
             }`}
           >
             -
@@ -147,7 +204,9 @@ const Calculator = () => {
             onClick={() => handleClick("+")}
             disabled={isOperatorDisabled}
             className={`py-2 px-4 ${
-              isOperatorDisabled ? "btn-disabled btn-outline-warning" : "btn-outline-warning"
+              isOperatorDisabled
+                ? "btn-disabled btn-outline-warning"
+                : "btn-outline-warning"
             }`}
           >
             +
