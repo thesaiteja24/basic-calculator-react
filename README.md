@@ -158,7 +158,7 @@ Contributions are welcome! Follow these steps:
 
 ## 💬 Feedback
 
-If you have any feedback or suggestions, feel free to reach out at [iamsaiteja2411@gmail.com](mailto:iamsaiteja2411@gmail.com) or create an issue on this repository.
+If you have any feedback or suggestions, feel free to reach out at [saiteja.patsa+github@gmail.com](mailto:saiteja.patsa+github@gmail.com) or create an issue on this repository.
 
 ---
 
